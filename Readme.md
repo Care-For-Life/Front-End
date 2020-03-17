@@ -21,7 +21,6 @@ yarn or npm test
 
 ## Table of Contents
 - **[Installation](#Installing)**<br>
-- **[Back End Developer](#backend-developers)**<br>
 - **[API Endpoints](#api-endpoints)**<br>
 - **[Product Vision Document](#Care-For-Life)**<br>
 - **[Proposal](#proposal)**<br>
