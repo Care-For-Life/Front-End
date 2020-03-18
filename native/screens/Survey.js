@@ -1,83 +1,7 @@
 import React from 'react';
 import { StyleSheet, Button, ScrollView, Text, TextInput, View } from 'react-native';
 import { SimpleSurvey } from 'react-native-simple-survey';
-
-const survey = [
-  {
-    questionType: 'Info',
-    questionText: 'Welcome! to get started press next.'
-  },
-  {
-    questionType: 'TextInput',
-    questionText: 'What Community does the family belong to?',
-    questionId: 'community_name'
-  },
-  {
-    questionType: 'TextInput',
-    questionText: 'What Family does the person belong to?',
-    questionId: 'family_name'
-  },
-  {
-    questionType: 'SelectionGroup',
-    questionText: 'Is it a family of orphans?',
-    questionId: 'orphans',
-    options: [
-      {
-        optionText: 'Yes',
-        value: 'true'
-      },
-      {
-        optionText: 'No',
-        value: 'false'
-      }
-    ]
-  },
-  {
-    questionType: 'SelectionGroup',
-    questionText: 'Is it a family with vulnerable children?',
-    questionId: 'vulnerable_children',
-    options: [
-      {
-        optionText: 'Yes',
-        value: 'true'
-      },
-      {
-        optionText: 'No',
-        value: 'false'
-      }
-    ]
-  },
-  {
-    questionType: 'SelectionGroup',
-    questionText: 'Is it a family led by children (without adults)?',
-    questionId: 'led_by_children',
-    options: [
-      {
-        optionText: 'Yes',
-        value: 'true'
-      },
-      {
-        optionText: 'No',
-        value: 'false'
-      }
-    ]
-  },
-  {
-    questionType: 'NumericInput',
-    questionText: 'Number of births since last survey or in last 6 months (if 1st survey) ',
-    questionId: 'number_of_births'
-  },
-  {
-    questionType: 'NumericInput',
-    questionText: 'Number of deaths since last survey or in last 6 months (if 1st survey) ',
-    questionId: 'number_of_deaths'
-  },
-  {
-    questionType: 'NumericInput',
-    questionText: 'Total number of persons that live in the house',
-    questionId: 'number_of_people'
-  }
-]
+import {annualSurvey} from '../surveys/annualSurvey';
 
 export default class Survey extends React.Component {
   constructor(props) {
@@ -85,6 +9,7 @@ export default class Survey extends React.Component {
     this.state = { answersSoFar: '' }
   }
 
+  // Submit button
   onSurveyFinished(answers) {
 
     const infoQuestionsRemoved = [...answers]
@@ -94,12 +19,16 @@ export default class Survey extends React.Component {
       answersAsObj[el.questionId] = el.value 
     }
     this.props.navigation.navigate('SurveyCompleted', { surveyAnswers: answersAsObj })
+
+    // STORE SURVEY TO ASYNC STORAGE HERE
   }
 
+  // Stores each answer to state
   onAnswerSubmitted(answer) {
     this.setState({ answersSoFar: JSON.stringify(this.surveyRef.getAnswers(), 2) });
   }
 
+  // Renders previous problem
   renderPreviousButton(onPress, enabled) {
     return (
         <View style={{ flexGrow: 1, maxWidth: 100, marginTop: 10, marginBottom: 10 }}>
@@ -114,6 +43,7 @@ export default class Survey extends React.Component {
     );
   }
 
+  // Renders next question
   renderNextButton(onPress, enabled) {
     return (
         <View style={{ flexGrow: 1, maxWidth: 100, marginTop: 10, marginBottom: 10 }}>
@@ -128,6 +58,7 @@ export default class Survey extends React.Component {
     );
   }
 
+  // Renders the last button
   renderFinishedButton(onPress, enabled) {
     return (
         <View style={{ flexGrow: 1, maxWidth: 100, marginTop: 10, marginBottom: 10 }}>
@@ -141,6 +72,7 @@ export default class Survey extends React.Component {
     );
   }
 
+  // Renders button
   renderButton(data, index, isSelected, onPress) {
     return (
         <View
@@ -150,7 +82,7 @@ export default class Survey extends React.Component {
             <Button
                 title={data.optionText}
                 onPress={onPress}
-                color={isSelected ? 'blue' : 'purple'}
+                color={isSelected ? 'blue' : 'black'}
                 style={isSelected ? { fontWeight: 'bold' } : {}} 
                 key={`button_${index}`}
             />
@@ -158,6 +90,7 @@ export default class Survey extends React.Component {
     );
   }
 
+  // Renders question
   renderQuestionText(questionText) {
     return (
         <View style={{ marginLeft: 10, marginRight: 10 }}>
@@ -166,6 +99,7 @@ export default class Survey extends React.Component {
     );
   }
 
+  // Renders input component for multiline questions
   renderTextBox(onChange, value, placeholder, onBlur) {
     return (
         <View>
@@ -186,6 +120,7 @@ export default class Survey extends React.Component {
     );
   }
 
+  // Renders input component for questions of type NumericInput
   renderNumericInput(onChange, value, placeholder, onBlur) {
     return (<TextInput 
         style={styles.numericInput}
@@ -200,6 +135,7 @@ export default class Survey extends React.Component {
     />);
   }
 
+  // Displays question
   renderInfoText(infoText) {
     return (
         <View style={{ marginLeft: 10, marginRight: 10 }}>
@@ -211,32 +147,29 @@ export default class Survey extends React.Component {
   render() {
     return (
       <View style={[styles.background, { backgroundColor: this.state.backgroundColor }]}>
-                <View style={styles.container}>
-                    <SimpleSurvey
-                        ref={(s) => { this.surveyRef = s; }}
-                        survey={survey}
-                        renderSelector={this.renderButton.bind(this)}
-                        containerStyle={styles.surveyContainer}
-                        selectionGroupContainerStyle={styles.selectionGroupContainer}
-                        navButtonContainerStyle={{ flexDirection: 'row', justifyContent: 'space-around' }}
-                        renderPrevious={this.renderPreviousButton.bind(this)}
-                        renderNext={this.renderNextButton.bind(this)}
-                        renderFinished={this.renderFinishedButton.bind(this)}
-                        renderQuestionText={this.renderQuestionText}
-                        onSurveyFinished={(answers) => this.onSurveyFinished(answers)}
-                        onAnswerSubmitted={(answer) => this.onAnswerSubmitted(answer)}
-                        renderTextInput={this.renderTextBox}
-                        renderNumericInput={this.renderNumericInput}
-                        renderInfo={this.renderInfoText}
-                    />
-                    
-                </View>
-                
-                <ScrollView style={styles.answersContainer}>
-                    <Text style={{textAlign:'center'}}>JSON output</Text>
-                    <Text>{this.state.answersSoFar}</Text>
-                </ScrollView>
-                
+        <View style={styles.container}>
+          <SimpleSurvey
+            ref={(s) => { this.surveyRef = s; }}
+            survey={annualSurvey}
+            renderSelector={this.renderButton.bind(this)}
+            containerStyle={styles.surveyContainer}
+            selectionGroupContainerStyle={styles.selectionGroupContainer}
+            navButtonContainerStyle={{ flexDirection: 'row', justifyContent: 'space-around' }}
+            renderPrevious={this.renderPreviousButton.bind(this)}
+            renderNext={this.renderNextButton.bind(this)}
+            renderFinished={this.renderFinishedButton.bind(this)}
+            renderQuestionText={this.renderQuestionText}
+            onSurveyFinished={(answers) => this.onSurveyFinished(answers)}
+            onAnswerSubmitted={(answer) => this.onAnswerSubmitted(answer)}
+            renderTextInput={this.renderTextBox}
+            renderNumericInput={this.renderNumericInput}
+            renderInfo={this.renderInfoText}
+          />
+        </View>
+        <ScrollView style={styles.answersContainer}>
+          <Text style={{textAlign:'center'}}>JSON output</Text>
+          <Text>{this.state.answersSoFar}</Text>
+        </ScrollView>
       </View>
     )
   }
