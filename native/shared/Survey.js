@@ -1,15 +1,15 @@
 import React from 'react';
-import { StyleSheet, Button, ScrollView, Text, TextInput, View } from 'react-native';
+import { StyleSheet, Button, ScrollView, Text, TextInput, View, Alert } from 'react-native';
 import { SimpleSurvey } from 'react-native-simple-survey';
 
 
 export default class Survey extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { answersSoFar: '', survey: props.survey }
+    this.state = { answersSoFar: '' }
   }
 
-  // Submit button
+  // // Submit button
   onSurveyFinished(answers) {
 
     const infoQuestionsRemoved = [...answers]
@@ -18,7 +18,11 @@ export default class Survey extends React.Component {
     for (const el of infoQuestionsRemoved) { 
       answersAsObj[el.questionId] = el.value 
     }
-    this.props.navigation.navigate('PersonSurvey', { surveyAnswers: answersAsObj })
+    Alert.alert('Continue to person survey?', '', [
+      {text: 'Yes', onPress: () => this.props.navigation.navigate('PersonSurvey', { surveyAnswers: answersAsObj })},
+      {text: 'No', onPress: () => this.props.navigation.navigate('SurveyCompleted', { surveyAnswers: answersAsObj })},
+    ])
+    
 
     // STORE SURVEY TO ASYNC STORAGE HERE
   }
@@ -150,7 +154,7 @@ export default class Survey extends React.Component {
         <View style={styles.container}>
           <SimpleSurvey
             ref={(s) => { this.surveyRef = s; }}
-            survey={this.state.survey}
+            survey={this.props.survey}
             renderSelector={this.renderButton.bind(this)}
             containerStyle={styles.surveyContainer}
             selectionGroupContainerStyle={styles.selectionGroupContainer}
