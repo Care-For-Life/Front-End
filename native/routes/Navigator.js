@@ -11,7 +11,7 @@ const Navigator = () => {
     <NavigationContainer>
       <Drawer.Navigator>
         <Drawer.Screen name="Home" component={HomeSatck}/>
-        <Drawer.Screen name="Survey" component={SurveyStack}/>
+        <Drawer.Screen name="FamilySurvey" component={SurveyStack}/>
       </Drawer.Navigator>
     </NavigationContainer>
   );

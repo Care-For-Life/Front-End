@@ -8,7 +8,7 @@ const SurveyCompleted = (props) => {
     <View style={styles.background}>
       <View style={styles.container}>
         <ScrollView>
-  <Text style={styles.questionText}>The results are in for family {answers.family_name}!</Text>
+          <Text style={styles.questionText}>The results are in for family {answers.family_name}!</Text>
           <Text>Raw JSON: {JSON.stringify(answers)}</Text>
         </ScrollView>
       </View>

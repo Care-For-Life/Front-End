@@ -1,4 +1,4 @@
-export const annualSurvey = [
+export const annualFamily = [
   {
     questionType: 'Info',
     questionText: 'Welcome! to get started press next.'

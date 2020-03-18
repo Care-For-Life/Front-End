@@ -1,12 +1,12 @@
 import React from 'react';
 import { StyleSheet, Button, ScrollView, Text, TextInput, View } from 'react-native';
 import { SimpleSurvey } from 'react-native-simple-survey';
-import {annualSurvey} from '../surveys/annualSurvey';
+
 
 export default class Survey extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { answersSoFar: '' }
+    this.state = { answersSoFar: '', survey: props.survey }
   }
 
   // Submit button
@@ -18,7 +18,7 @@ export default class Survey extends React.Component {
     for (const el of infoQuestionsRemoved) { 
       answersAsObj[el.questionId] = el.value 
     }
-    this.props.navigation.navigate('SurveyCompleted', { surveyAnswers: answersAsObj })
+    this.props.navigation.navigate('PersonSurvey', { surveyAnswers: answersAsObj })
 
     // STORE SURVEY TO ASYNC STORAGE HERE
   }
@@ -150,7 +150,7 @@ export default class Survey extends React.Component {
         <View style={styles.container}>
           <SimpleSurvey
             ref={(s) => { this.surveyRef = s; }}
-            survey={annualSurvey}
+            survey={this.state.survey}
             renderSelector={this.renderButton.bind(this)}
             containerStyle={styles.surveyContainer}
             selectionGroupContainerStyle={styles.selectionGroupContainer}
@@ -166,10 +166,6 @@ export default class Survey extends React.Component {
             renderInfo={this.renderInfoText}
           />
         </View>
-        <ScrollView style={styles.answersContainer}>
-          <Text style={{textAlign:'center'}}>JSON output</Text>
-          <Text>{this.state.answersSoFar}</Text>
-        </ScrollView>
       </View>
     )
   }
@@ -180,7 +176,7 @@ const styles = StyleSheet.create({
       minWidth: '70%',
       maxWidth: '90%',
       alignItems: 'stretch',
-      justifyContent: 'center',
+      justifyContent: 'flex-start',
       
       elevation: 20,
       borderRadius: 10,
