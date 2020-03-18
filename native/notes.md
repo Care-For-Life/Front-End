@@ -5,3 +5,4 @@
 - `npm install react-apollo`
 - `npm install @react-navigation/drawer`
 - `npm install @react-navigation/stack`
+- `npm i react-native-simple-survey`
